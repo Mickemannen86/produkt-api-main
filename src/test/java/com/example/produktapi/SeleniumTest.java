@@ -230,6 +230,6 @@ class SeleniumTest {
         driver.quit();
     }
 
- */
+ kommenterar mera */
 
 }

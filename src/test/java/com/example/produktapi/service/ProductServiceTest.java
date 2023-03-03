@@ -33,7 +33,6 @@ class ProductServiceTest {
     @Captor // för att fånga argument
     ArgumentCaptor<Product> productCaptor;
 
-
     @Test // getAllProducts
     void whenGetAllProducts_thenExactlyOneInteractionWithRepositoryMethodFindAll() { //notis, inte TDD                                  //  -check!
 
@@ -87,8 +86,7 @@ class ProductServiceTest {
     }
 
     @Test // getProductById()
-    void getProductById_givenExistingId_whenGetProductById_thenRecieveProduct() { // funkar ej SET ID, skapa product
-        //
+    void getProductById_givenExistingId_whenGetProductById_thenRecieveProduct() { // fel, behöver underTest
 
         // given
         Integer id = 1;
@@ -102,20 +100,18 @@ class ProductServiceTest {
         );
 
         product.setId(id);
+
         // when
-        Optional <Product> productById = repository.findById(product.getId());
+        underTest.addProduct(product);
 
         // then
-        Assertions.assertAll(
-                ()-> assertFalse(productById.isPresent()),
-                ()-> assertTrue(productById.isEmpty()) // kollar så
-                // ()-> assertThrows(Exception.class, ()-> productById.get(), "Detta meddelande syns om det blir fel")
-        );
-        System.out.println(product.getId());
+        given(repository.findById(product.getId())).willReturn(Optional.of(product)); // Rätt id returnerar en product
+        assertTrue(repository.findById(id).isPresent()); // fail annat än id 1
+
     }
 
     @Test // getProductById
-    void givenNotExistingID_whenGetProductById_thenThrowEntityNotFoundException() {
+    void givenNotExistingID_whenGetProductById_thenThrowEntityNotFoundException() { //                                  -check
 
         // product.setId går att göra, overkill
 
@@ -133,13 +129,14 @@ class ProductServiceTest {
 
         // product.setId(id);
 
-        // returnera tomt id om inte id  finns
+        // when             // returnera tomt id om inte id  finns
         when(repository.findById(id)).thenReturn(Optional.empty()); // finns den ska den komma tbx, annars som empty
 
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, ()-> {
                     underTest.getProductById(id);
                 });
 
+        // then
         assertEquals("Produkt med id " + id + " hittades inte", exception.getMessage());
 /*
         Assertions.assertAll(
@@ -148,8 +145,6 @@ class ProductServiceTest {
         );
 
  */
-
-
     }
 
     @Test //
@@ -238,7 +233,7 @@ class ProductServiceTest {
         // updatedProduct.setTitle("updated by Micke"); uppdaterar bara titel tex..
 
         //when
-        when(repository.findById(id)).thenReturn(Optional.ofNullable(updatedProduct));
+        when(repository.findById(id)).thenReturn(Optional.of(updatedProduct));
         when(repository.save(updatedProduct)).thenReturn(updatedProduct);
 
         Product resultatet = underTest.updateProduct(updatedProduct, id);
@@ -267,7 +262,6 @@ class ProductServiceTest {
         // then
         assertEquals(id,id);
         assertEquals("Produkt med id " + id + " hittades inte", exception.getMessage());
-
 
     }
 

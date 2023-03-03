@@ -1,10 +1,12 @@
 package com.example.produktapi.repository;
 
+
 import com.example.produktapi.model.Product;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -115,7 +117,6 @@ class ProductRepositoryTest {
         // then
         assertFalse(listProduct.size() > 4); // Kollar antalet kategorier - fail annat än 4
         assertEquals(acualCategories, listProduct); // Kollar om categorys är duplicated
-
 
     }
 }

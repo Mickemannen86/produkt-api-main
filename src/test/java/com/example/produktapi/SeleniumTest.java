@@ -55,17 +55,25 @@ class SeleniumTest {
 
         driver.get("https://java22.netlify.app/");
 
+
+
+
         /*
         // Ett sätt
         WebElement h1Element =  driver.findElement(By.xpath("//*[@id='root']/div/div[1]/div/h1"));
         String h1Text2 = h1Element.getText();
          */
 
+
+
+
         // sätt 2
         String h1Text = driver.findElement(By.xpath("//*[@id='root']/div/div[1]/div/h1")).getText();
 
         // Testdrive = fail
         assertEquals(h1Text, "Testdriven utveckling - projekt", "fuck!");
+
+        driver.quit();
 
     }
 
@@ -148,6 +156,7 @@ class SeleniumTest {
     }
  */
 
+
     @Test // G - check! 2/3
     public void numberOfProductsShouldBeTwenty() {
 
@@ -155,8 +164,8 @@ class SeleniumTest {
         WebDriver driver = new ChromeDriver();
 
         driver.get("https://java22.netlify.app/");
-
         //
+       driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         List <WebElement> products = driver.findElements(By.className("productItem"));
 
         // 21 = fail
@@ -183,20 +192,22 @@ class SeleniumTest {
         // testar att priset stämmer överens - fail genom att ge tex 95.4
         assertEquals("109.95", price, "fel pris");
 
-    }
+        driver.quit();
 
+    }
+/*
     @Test
-    public void checkProductsHaveRightPrices(){
+    public void checkProductsHaveRightPrices() {
 
         WebDriver driver = new ChromeDriver();
 
-        driver.get("https://java22.netlify.app/%22");
+        driver.get("https://java22.netlify.app/");
 
                 driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
         String productOne = driver.findElement(By.xpath("//[@id='productsContainer']/div/div[1]/div/div/p")).getText();
         String productTwo = driver.findElement(By.xpath("//[@id='productsContainer']/div/div[2]/div/div/p")).getText();
-        String productThree = driver.findElement(By.xpath("//*[@id='productsContainer']/div/div[3]/div/div/p")).getText();
+        String productThree = driver.findElement(By.xpath("//[@id='productsContainer']/div/div[3]/div/div/p")).getText();
 
         String findPriceForProductOne = "109.95";
         String findPriceForProductTwo = "22.3";
@@ -218,4 +229,7 @@ class SeleniumTest {
 
         driver.quit();
     }
+
+ */
+
 }

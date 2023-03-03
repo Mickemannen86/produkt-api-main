@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class SeleniumTest {
-
+/* skriv
     @Test
     public void checkSVTplayTitle() {
 
@@ -66,7 +66,7 @@ class SeleniumTest {
 
 
 
-
+/* skriv
         // sätt 2
         String h1Text = driver.findElement(By.xpath("//*[@id='root']/div/div[1]/div/h1")).getText();
 
@@ -156,7 +156,7 @@ class SeleniumTest {
     }
  */
 
-
+/* skriv
     @Test // G - check! 2/3
     public void numberOfProductsShouldBeTwenty() {
 

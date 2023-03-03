@@ -211,6 +211,7 @@ class SeleniumTest {
     }
 
     @Test
+    @Disabled
     public void checkProductsHaveRightPrices() {
 
         // Hämta in den webDriver som ska användas

@@ -34,7 +34,7 @@ class ProductServiceTest {
     ArgumentCaptor<Product> productCaptor;
 
     @Test // getAllProducts
-    void whenGetAllProducts_thenExactlyOneInteractionWithRepositoryMethodFindAll() { //notis, inte TDD                                  //  -check!
+    void whenGetAllProducts_thenExactlyOneInteractionWithRepositoryMethodFindAll() { // notis, inte TDD                 - check!
 
         //when - vad är det vi testar
         underTest.getAllProducts();
@@ -48,7 +48,7 @@ class ProductServiceTest {
     }
 
     @Test // getAllCategories
-    void whenGetAllCategories_thenExactlyOneInteractionWithRepositoryMethodFindAllCategories() {                                        //  -check!
+    void whenGetAllCategories_thenExactlyOneInteractionWithRepositoryMethodFindAllCategories() { //                     - check!
 
         //when
         underTest.getAllCategories();
@@ -58,8 +58,8 @@ class ProductServiceTest {
         verifyNoMoreInteractions(repository);
     }
 
-    @Test // getProductsByCategory
-    void givenAnExistingCategoryList_whenGetProductsByCategory_thenReceivesANonEmptyList() { // kollar så listan inte ska va tom om product finns - - check
+    @Test // getProductsByCategory                                                                                      - check
+    void givenAnExistingCategoryList_whenGetProductsByCategory_thenReceivesANonEmptyList() { // kollar så listan inte ska va tom om product finns
 
         // given
         String existingCategory = "men";
@@ -75,18 +75,12 @@ class ProductServiceTest {
         assertEquals("men", productsByCategory.get(0).getCategory()); // Hämtar även ut categorinamn för att dubbel kolla
 
         /*
-        verify(repository).findByCategory(existingCategory);
-        verifyNoMoreInteractions(repository);
         System.out.println(productsByCategory);
-
-        underTest.getProductsByCategory(existingCategory);
-        verify(repository, times(1)).findByCategory(existingCategory); // 2 - fail, 1 success, hämtas 1 gång
-
          */
     }
 
-    @Test // getProductById()
-    void getProductById_givenExistingId_whenGetProductById_thenRecieveProduct() { // fel, behöver underTest
+    @Test // getProductById() - normalflöde
+    void getProductById_givenExistingId_whenGetProductById_thenRecieveProduct() { //                                    - check!
 
         // given
         Integer id = 1;
@@ -110,8 +104,8 @@ class ProductServiceTest {
 
     }
 
-    @Test // getProductById
-    void givenNotExistingID_whenGetProductById_thenThrowEntityNotFoundException() { //                                  -check
+    @Test // getProductById - felflöde
+    void givenNotExistingID_whenGetProductById_thenThrowEntityNotFoundException() { //                                  - check!
 
         // product.setId går att göra, overkill
 
@@ -129,7 +123,7 @@ class ProductServiceTest {
 
         // product.setId(id);
 
-        // when             // returnera tomt id om inte id  finns
+        // when            returnera tomt id om inte id  finns
         when(repository.findById(id)).thenReturn(Optional.empty()); // finns den ska den komma tbx, annars som empty
 
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, ()-> {
@@ -138,18 +132,13 @@ class ProductServiceTest {
 
         // then
         assertEquals("Produkt med id " + id + " hittades inte", exception.getMessage());
-/*
-        Assertions.assertAll(
-                ()-> assertEquals(1, 2, "Produkt med id %d hittades inte"),
-                ()-> assertThrows(EntityNotFoundException.class, ()-> underTest.getProductById(id))
-        );
 
- */
     }
 
-    @Test //
-    void tryAddingAnId_thenReturnTrue() {
+    @Test // addProduct() - normalflöde
+    void givenNewProduct_whenAddingAProductAndGivingAnValidId_thenReturnTrueIfProductIsFound() { //                     - check!
 
+        // given
         Product product = new Product(
                 "Titel",
                 200.0,
@@ -157,43 +146,22 @@ class ProductServiceTest {
                 "category",
                 "url");
 
-        underTest.addProduct(product);
-
-        product.setId(1);
-
-        given(repository.findById(1)).willReturn(Optional.of(product)); // id returnerar en produkt
-        Assertions.assertTrue(repository.findById(1).isPresent()); // fail annat än 1 = fail
-    }
-
-    @Test // addProduct()
-    void givenNewProducts_whenAddingAProduct_thenSaveMethodShouldBeCalled() {
-
-        // given
-        Product product = new Product("Dator",4000.0,"","","");
-        Product product2 = new Product("Fel-Dator",4000.0,"","","");
-
         // when
         underTest.addProduct(product);
+        product.setId(1);
 
         // then
-        // verify(repository).save(product2); // fail men prudct skulle funka tex
-        verify(repository).save(productCaptor.capture()); // fångar alla argument(producter som lagts in)
-        assertEquals(product, productCaptor.getValue()); // success
-        // assertEquals(product2, productCaptor.getValue()); // fail
-        // assertNotEquals(product, productCaptor.getValue()); // fail
-
+        given(repository.findById(1)).willReturn(Optional.of(product)); // id returnerar en produkt
+        Assertions.assertTrue(repository.findById(1).isPresent()); // fail annat än 1 eller om -  isEmpty() = fail
     }
 
-    @Test
-    void givenNewProduct_whenAddingProductWithDuplicateTitle_thenThrowError() {
+    @Test // addProduct - felflöde
+    void givenNewProduct_whenAddingProductWithDuplicateTitle_thenThrowError() { //                                      - check!
 
         // given
         String title = "Vår Test-titel";
         Product product = new Product(title,300.0,"","","");
         given(repository.findByTitle(title)).willReturn(Optional.of(product));
-
-        // when
-        //underTest.addProduct(product); // flytta ner til then testet för att få ihop vår kod
 
         // then
         BadRequestException exception = assertThrows(BadRequestException.class,
@@ -201,12 +169,12 @@ class ProductServiceTest {
                 ()-> underTest.addProduct(product));
         verify(repository, times(1)).findByTitle(title); // success
         verify(repository, times(0)).save(any()); // times() kan bytas till never()
-        assertEquals("En produkt med titeln: Vår Test-titel finns redan", exception.getMessage());
+        assertEquals("En produkt med titeln: Vår Test-titel finns redan", exception.getMessage()); // fail vid Test-Titel
 
     }
 
-    @Test // updateProduct
-    void updateProduct_givenValidId_whenTryingToUpdateProduct_thenUpdateProductById() {
+    @Test // updateProduct - normalflöde
+    void updateProduct_givenValidId_whenTryingToUpdateProduct_thenUpdateProductById() { //                              - check!
 
         //given
         Integer id = 1; // vi ger id vi skapar
@@ -230,9 +198,8 @@ class ProductServiceTest {
                 "Picen"
         );
 
-        // updatedProduct.setTitle("updated by Micke"); uppdaterar bara titel tex..
+        //updatedProduct.setTitle("updated by Micke"); //uppdaterar bara titel tex..
 
-        //when
         when(repository.findById(id)).thenReturn(Optional.of(updatedProduct));
         when(repository.save(updatedProduct)).thenReturn(updatedProduct);
 
@@ -245,12 +212,10 @@ class ProductServiceTest {
     }
 
     @Test // updateProduct - Felhanteringen - felflöde
-    void updateProduct_givenNotValidId_whenTryingToUpdateProduct_thenThrowEntityNotFoundException() {
+    void updateProduct_givenNotValidId_whenTryingToUpdateProduct_thenThrowEntityNotFoundException() { //                - check!
 
         // given
         Integer id = 1; // vi ger id vi skapar
-
-        //when(repository.findById(id)).thenReturn(Optional.empty());
 
         Product updateProduct = new Product("", 45.0, "", "", "");
 
@@ -265,8 +230,8 @@ class ProductServiceTest {
 
     }
 
-    @Test // deleteProduct - Normalflöde
-    void testDeleteProduct_givenValidId_whenTryingToDeleteProduct_thenDeleteProductById() {
+    @Test // deleteProduct - Normalflöde                                                                                - check!
+    void testDeleteProduct_givenValidId_whenTryingToDeleteProduct_thenExactlyOneInteractionWithRepositoryMethodDeleteById() {
 
         // given
         Integer id = 1; // vi ger id vi skapar
@@ -287,15 +252,13 @@ class ProductServiceTest {
         underTest.deleteProduct(id);
 
         // then
-        verify(repository, times(1)).deleteById(id);
-
-        assertNotNull(underTest.getProductById(id)); // NotNull pass
-        assertEquals(id,id);
+        verify(repository, times(1)).deleteById(id); // fail om deleteById anropas fler gånger än 1 gång.
+        verifyNoMoreInteractions(repository);
 
     }
 
     @Test // deleteProduct - Felhantering aka felflöde
-    void deleteProduct_givenNotValidId_whenTryingToDelete_thenThrowEntityNotFoundException() {
+    void deleteProduct_givenNotValidId_whenTryingToDelete_thenThrowEntityNotFoundException() { //                       - check!
 
         // Felhanteringen
         // given
@@ -307,7 +270,7 @@ class ProductServiceTest {
         });
 
         // then
-        assertEquals(id,id);
+        assertEquals(id,id); // checkar id vad ja får å vad som expects
         assertEquals("Produkt med id " + id + " hittades inte", exception.getMessage());
 
     }

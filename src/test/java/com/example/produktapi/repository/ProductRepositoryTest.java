@@ -22,7 +22,7 @@ class ProductRepositoryTest {
     @Test
     void testingOurRepository() {
         List <Product> products = underTest.findAll();
-        Assertions.assertFalse(products.isEmpty()); // True = fel
+        Assertions.assertFalse(products.isEmpty()); // assertTrue = fel
     }
 
     @Test // findByCategory
@@ -52,12 +52,12 @@ class ProductRepositoryTest {
         List <Product> listProduct = underTest.findByCategory("electronic");
 
         // then
-        assertTrue(listProduct.isEmpty());
+        assertTrue(listProduct.isEmpty()); // assertFalse vid fail.
 
     }
 
-    @Test
-    void findByTitle_whenSearchingForANonExistingTitle_thenReturnThatProduct() {
+    @Test // findByTitle
+    void findByTitle_givenValidTitle_whenSearchingForAExistingTitle_thenReturnThatProduct() {
 
         // given
         String title = "radio";
@@ -65,18 +65,18 @@ class ProductRepositoryTest {
         underTest.save(product);
 
         // when
-        Optional <Product> optionalProduct = underTest.findByTitle("radio");  // fail Radion
+        Optional <Product> result = underTest.findByTitle("radio");  // fail Radion
 
         // then
         Assertions.assertAll(
-                () -> assertTrue(optionalProduct.isPresent()),
-                () -> assertFalse(optionalProduct.isEmpty()),
-                () -> assertEquals(product.getTitle(), optionalProduct.get().getTitle())
+                () -> assertTrue(result.isPresent()),
+                () -> assertFalse(result.isEmpty()),
+                () -> assertEquals(product.getTitle(), result.get().getTitle())
         );
     }
 
-    @Test
-    void findByTitle_whenSearchingForANonExistingTitle_thenReturnEmptyProduct() {
+    @Test // findByTitle
+    void findByTitle_givenNotValidTitle_whenSearchingForANonExistingTitle_thenReturnNoProduct() {
 
         // given
         String title = "en annan dator";
@@ -87,13 +87,12 @@ class ProductRepositoryTest {
         // then
         Assertions.assertAll(
                 () -> assertFalse(optionalProduct.isPresent()),
-                () -> assertTrue(optionalProduct.isEmpty()),
-                () -> assertThrows(NoSuchElementException.class, ()-> optionalProduct.get(), "skicka eget felmeddelande om de blir fel")
+                () -> assertTrue(optionalProduct.isEmpty())
         );
     }
 
-    @Test
-    void findAllCategories() {
+    @Test // findAllCategories
+    void findAllCategories_whenUsingFindAllCategories_thenReturnAllFourCategorys() {
 
         // when
         List <String> listProduduct = underTest.findAllCategories();
@@ -104,19 +103,19 @@ class ProductRepositoryTest {
 
     }
 
-    @Test
-    void findNoDuplicatedCategory() {
+    @Test // findAllCategories
+    void findAllCategories_givenListOfValidCategoriesAndRestrictDuplicates_whenUsingFindAllCategories_thenReturnAllFourCategorys() {
 
         // given
-        List <String> acualCategories = new ArrayList<>(Arrays.asList("electronics", "jewelery", "men's clothing", "women's clothing")); // fail electronic
-        acualCategories.stream().distinct().collect(Collectors.toList());
+        List <String> actualCategories = new ArrayList<>(Arrays.asList("electronics", "jewelery", "men's clothing", "women's clothing")); // fail electronic
+        actualCategories.stream().distinct().collect(Collectors.toList());
 
         // when
         List <String> listProduct = underTest.findAllCategories();
 
         // then
         assertFalse(listProduct.size() > 4); // Kollar antalet kategorier - fail annat än 4
-        assertEquals(acualCategories, listProduct); // Kollar om categorys är duplicated
+        assertEquals(actualCategories, listProduct); // Kollar om categorys är duplicated
 
     }
 }

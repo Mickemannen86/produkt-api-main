@@ -23,18 +23,18 @@ class SeleniumTest {
 
     @Test  // G - check! 1/3
     @Disabled
-    void checkSTItitle() {
+    void checkJava22title() {
 
         // Hämta in den webDriver som ska användas
         WebDriver driver = new ChromeDriver();
 
         // Navigera till den webbsida som ska testas -  navigate().to kan va get()
-        driver.get("https://sti.se");
+        driver.get("https://java22.netlify.app/");
 
-        // fail = "STI"
-        assertEquals("STI - YH-program och vidareutbildningar inom teknik & IT", driver.getTitle(),"Felmeddelande: Title don't match as expected! Note it's Case Sensitive");
+        // fail = "webbutik"
+        assertEquals("Webbutik", driver.getTitle(),"Felmeddelande: Title don't match as expected! Note it's Case Sensitive");
 
-        driver.quit();
+        // driver.quit();
     }
 
     @Test // G - check! 2/3
@@ -57,6 +57,77 @@ class SeleniumTest {
         driver.quit();
     }
 
+    @Test // G - check! 3/3. pris: 1
+    @Disabled
+    public void checkIfProductOneHaveRightPrice() {
+
+        // Hämta in den webDriver som ska användas
+        WebDriver driver = new ChromeDriver();
+
+        // Navigera till den webbsida som ska testas -  navigate().to kan va get()
+        driver.get("https://java22.netlify.app/");
+
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+        String productOne = driver.findElement(By.xpath("//*[@id='productsContainer']/div/div[1]/div/div/p")).getText();
+
+        String findPriceForProductOne = "109.95";
+
+        boolean validatePriceForProductOne = productOne.contains(findPriceForProductOne);
+
+        assertTrue(validatePriceForProductOne, "Priset på produkt 1 stämmer inte!");
+
+        driver.quit();
+    }
+
+    @Test // G - check! 3/3. pris: 2
+    @Disabled
+    public void checkIfProductTwoHaveRightPrice() {
+
+        // Hämta in den webDriver som ska användas
+        WebDriver driver = new ChromeDriver();
+
+        // Navigera till den webbsida som ska testas -  navigate().to kan va get()
+        driver.get("https://java22.netlify.app/");
+
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+        String productTwo = driver.findElement(By.xpath("//*[@id='productsContainer']/div/div[2]/div/div/p")).getText();
+
+        String findPriceForProductTwo = "22.3";
+
+        boolean validatePriceForProductTwo = productTwo.contains(findPriceForProductTwo);
+
+        assertTrue(validatePriceForProductTwo, "Priset på produkt 2 stämmer inte!");
+
+        driver.quit();
+    }
+
+    @Test // G - check! 3/3. pris: 3
+    @Disabled
+    public void checkIfProductThreeHaveRightPrice() {
+
+        // Hämta in den webDriver som ska användas
+        WebDriver driver = new ChromeDriver();
+
+        // Navigera till den webbsida som ska testas -  navigate().to kan va get()
+        driver.get("https://java22.netlify.app/");
+
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+        String productThree = driver.findElement(By.xpath("//*[@id='productsContainer']/div/div[3]/div/div/p")).getText();
+
+        String findPriceForProductThree = "55.99";
+
+        boolean validatePriceForProductThree = productThree.contains(findPriceForProductThree);
+
+        assertTrue(validatePriceForProductThree, "Priset på produkt 3 stämmer inte!");
+
+        driver.quit();
+    }
+
+    // -----------------| * Disabled * |------------------- \\
+
     @Test // G - check! 3/3
     @Disabled
     public void checkIfPriceIsRightOnThreeProducts () {
@@ -73,15 +144,13 @@ class SeleniumTest {
 
         // Ta ut pris från texten
         String priceText = priceElement.getText();
-        String price = priceText.replaceAll("[^\\d.]", "");
+        String price = priceText.replaceAll("[^\\d.]", ""); // replace all med "", men inte d. = digits.
 
         // testar att priset stämmer överens - fail genom att ge tex 95.4
         assertEquals("109.95", price, "fel pris");
 
         driver.quit();
     }
-
-    // -----------------| * Disabled * |------------------- \\
 
     @Test
     @Disabled
@@ -206,43 +275,6 @@ class SeleniumTest {
 
         // fail "SVT Playy"
         assertEquals("SVT Play", driver.getTitle(), "Felmeddelande: Title don't match as expected! Note it's Case Sensitive");
-
-        driver.quit();
-    }
-
-    @Test
-    @Disabled
-    public void checkProductsHaveRightPrices() {
-
-        // Hämta in den webDriver som ska användas
-        WebDriver driver = new ChromeDriver();
-
-        // Navigera till den webbsida som ska testas -  navigate().to kan va get()
-        driver.get("https://java22.netlify.app/");
-
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-
-        String productOne = driver.findElement(By.xpath("//*[@id='productsContainer']/div/div[1]/div/div/p")).getText();
-        String productTwo = driver.findElement(By.xpath("//*[@id='productsContainer']/div/div[2]/div/div/p")).getText();
-        String productThree = driver.findElement(By.xpath("//*[@id='productsContainer']/div/div[3]/div/div/p")).getText();
-
-        String findPriceForProductOne = "109.95";
-        String findPriceForProductTwo = "22.3";
-        String findPriceForProductThree = "55.99";
-
-        boolean validatePriceForProductOne = productOne.contains(findPriceForProductOne);
-        boolean validatePriceForProductTwo = productTwo.contains(findPriceForProductTwo);
-        boolean validatePriceForProductThree = productThree.contains(findPriceForProductThree);
-
-        if (validatePriceForProductOne && validatePriceForProductTwo && validatePriceForProductThree) {
-            System.out.println("Produkt one Correct price " + findPriceForProductOne);
-            System.out.println("Produkt two Correct price " + findPriceForProductTwo);
-            System.out.println("Produkt three Correct price " + findPriceForProductThree);
-        }
-
-        assertTrue(validatePriceForProductOne, "Priset på produkt 1 stämmer inte!");
-        assertTrue(validatePriceForProductTwo, "Priset på produkt 2 stämmer inte!");
-        assertTrue(validatePriceForProductThree, "Priset på produkt 3 stämmer inte!");
 
         driver.quit();
     }

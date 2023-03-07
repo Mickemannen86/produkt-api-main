@@ -20,7 +20,7 @@ class ProductRepositoryTest {
     private ProductRepository underTest;
 
     @Test
-    void testingOurRepository() {
+    void whenTestingOurRepositoryWithFindAll_thenDisplayFalseIfNotEmpty() {
         List <Product> products = underTest.findAll();
         Assertions.assertFalse(products.isEmpty()); // assertTrue = fel
     }
@@ -114,7 +114,7 @@ class ProductRepositoryTest {
         List <String> listProduct = underTest.findAllCategories();
 
         // then
-        assertFalse(listProduct.size() > 4); // Kollar antalet kategorier - fail annat än 4
+        assertTrue(listProduct.size() == 4); // Kollar antalet kategorier - fail annat än 4
         assertEquals(actualCategories, listProduct); // Kollar om categorys är duplicated
 
     }

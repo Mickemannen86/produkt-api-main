@@ -34,7 +34,7 @@ class SeleniumTest {
         // fail = "webbutik"
         assertEquals("Webbutik", driver.getTitle(),"Felmeddelande: Title don't match as expected! Note it's Case Sensitive");
 
-        // driver.quit();
+        driver.quit();
     }
 
     @Test // G - check! 2/3
@@ -47,12 +47,14 @@ class SeleniumTest {
         // Navigera till den webbsida som ska testas -  navigate().to kan va get()
         driver.get("https://java22.netlify.app/");
 
-        //
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        WebElement displayingProducts = new WebDriverWait(driver, Duration.ofSeconds(20))
+                .until(ExpectedConditions.visibilityOfElementLocated(By.className("productItem")));
+
         List <WebElement> products = driver.findElements(By.className("productItem"));
 
         // 21 = fail
-        assertEquals(20,products.size(), "Antalet do not match!");
+        assertTrue(displayingProducts.isDisplayed()); // fail om False
+        assertEquals(20,products.size(), "Antalet do not match!"); // fail om annat antal.
 
         driver.quit();
     }
@@ -126,6 +128,9 @@ class SeleniumTest {
         driver.quit();
     }
 
+
+
+    // -----------------| * G AVKLARAT!  * |------------------- \\
     // -----------------| * Disabled * |------------------- \\
 
     @Test // G - check! 3/3

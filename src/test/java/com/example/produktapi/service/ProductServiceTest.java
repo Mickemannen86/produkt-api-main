@@ -74,7 +74,7 @@ class ProductServiceTest {
         // then
         verify(repository, times(1)).findByCategory(stringCaptor.capture()); // annat än 1
         verifyNoMoreInteractions(repository);
-        assertEquals("hockeyklubba", stringCaptor.getValue()); // kollar så det är samma titel
+        assertEquals(existingCategory, stringCaptor.getValue()); // fail - "woman". Kollar så det är samma category
 
     }
 
